@@ -11,6 +11,7 @@ model user {
   id                Int     @id @default(autoincrement())
   public_id         String  @unique @db.VarChar(300)
   nascimento        String  @db.VarChar(10)
+  nome              String? @db.VarChar(100)
   nomeMae           String? @db.VarChar(100)
   nomePai           String? @db.VarChar(100)
   cep               String  @db.VarChar(8)
