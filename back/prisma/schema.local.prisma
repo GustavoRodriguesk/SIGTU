@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id        Int    @id @default(autoincrement())
+  public_id String @unique @db.VarChar(300)
+  name      String @db.VarChar(100)
+  email     String @unique(map: "email_UNIQUE") @db.VarChar(200)
+  pass      String @db.VarChar(256)
+  sessions  session[]
+}
+
+model session {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  userId    Int
+  user      user     @relation(fields: [userId], references: [id])
+}
