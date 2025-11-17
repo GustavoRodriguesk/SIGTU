@@ -13,15 +13,15 @@ export const userSchema = z.object({
     .optional(),
 
   public_id: z
-    .string({
-      required_error: "O public_id é obrigatório",
-    })
-    .max(300, "O public_id deve ter no máximo 300 caracteres."),
+    .string()
+    .max(300, "O public_id deve ter no máximo 300 caracteres.")
+    .optional(), // <-- agora é opcional
 
   email: z
     .string({
       required_error: "O email é obrigatório",
     })
+    .email()
     .max(300, "O email deve ter no máximo 300 caracteres."),
 
   nascimento: z
@@ -34,9 +34,7 @@ export const userSchema = z.object({
   nome: z
     .string()
     .min(3, "O nome deve ter no mínimo 3 caracteres.")
-    .max(100, "O nome deve ter no máximo 100 caracteres.")
-    .optional(),
-
+    .max(100, "O nome deve ter no máximo 100 caracteres."),
   nomeMae: z
     .string()
     .min(3, "O nome da mãe deve ter no mínimo 3 caracteres.")
@@ -140,6 +138,24 @@ export const validateUserToLogin = (user) => {
   return partialUserSchema.safeParse(user);
 };
 
+// export const validateUserToLogin = (user) => {
+//     const loginSchema = z.object({
+//       email: z.string().email(),
+//       pass: z.string().min(6).max(256),
+//     });
+//     return loginSchema.safeParse(user);
+//   };
+
+export const validateUserToUpdate = (user) => {
+  const updateSchema = userSchema.partial().extend({
+    id: z.number({
+      required_error: "O ID é obrigatório para atualizar.",
+    }),
+  });
+
+  return updateSchema.safeParse(user);
+};
+
 export const getAll = async () => {
   const users = await prisma.user.findMany({
     select: {
@@ -236,7 +252,7 @@ export const getByEmail = async (email) => {
   return user;
 };
 
-export const getByCpf = async (email) => {
+export const getByCpf = async (cpf) => {
   const user = await prisma.user.findUnique({
     where: {
       cpf,
@@ -281,33 +297,39 @@ export const getByCpf = async (email) => {
 export const create = async (user) => {
   const result = await prisma.user.create({
     data: user,
+    select: {
+      id: true,
+      public_id: true,
+      email: true,
+      nome: true,
+      cpf: true,
+    },
   });
-  delete result.pass;
-
-  return result;
 };
 
 export const remove = async (id) => {
   const user = await prisma.user.delete({
     where: {
       id,
-    }
+    },
   });
   delete user.pass;
   return user;
 };
 
 export const update = async (user) => {
+  const { id, ...data } = user;
+
   const result = await prisma.user.update({
-    where: {
-      id: user.id,
-    },
-    data: user,
+    where: { id },
+    data,
     select: {
       id: true,
       nome: true,
-      email: true,
+      cpf: true,
+      public_id: true,
     },
   });
+
   return result;
 };

@@ -3,14 +3,39 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"           // Alterado de postgresql para mysql
   url      = env("DATABASE_URL")
 }
 
 model user {
-  id        Int    @id @default(autoincrement())
-  public_id String @unique @db.VarChar(300)
-  name      String @db.VarChar(100)
-  email     String @unique(map: "email_UNIQUE") @db.VarChar(200)
-  pass      String @db.VarChar(256)
+  id                Int     @id @default(autoincrement())
+  public_id         String  @unique @db.VarChar(300)
+  name              String  @db.VarChar(100)
+  email             String  @unique(map: "email_UNIQUE") @db.VarChar(200)
+  pass              String  @db.VarChar(256)
+  nascimento        String? @db.VarChar(10)
+  nomeMae           String? @db.VarChar(100)
+  nomePai           String? @db.VarChar(100)
+  cep               String? @db.VarChar(8)
+  telefone          String? @db.VarChar(11)
+  faltas            Int?
+  sitFamiliar       String? @db.VarChar(50)
+  residencia        String? @db.VarChar(50)
+  universidade      String? @db.VarChar(40)
+  semestre          String? @db.VarChar(2)
+  anoConclusao      String? @db.VarChar(4)
+  dias              String? @db.VarChar(10)
+  periodo           String? @db.VarChar(10)
+  horDetalhado      String? @db.VarChar(100)
+  bolsa             Boolean?
+  bolsaTipo         String? @db.VarChar(20)
+  bolsaPercent      String? @db.VarChar(4)
+  foto3x4           String? @db.VarChar(300)
+  cpfImg            String? @db.VarChar(300)
+  compResidencia    String? @db.VarChar(300)
+  historicoEscolar  String? @db.VarChar(300)
+  decMatricula      String? @db.VarChar(300)
+  cronogramaAulas   String? @db.VarChar(300)
+  declaracaoEscrita String? @db.VarChar(300)
+  cepPonto          String? @db.VarChar(8)
 }
