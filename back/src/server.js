@@ -1,7 +1,7 @@
 //const express = require('express')
 import express from 'express'
 import userRouter from './routers/userRouter.js'
-import productRouter from './routers/productRouter.js'
+//import linhaRouter from './routers/linhaRouter.js'
 import authRouter from './routers/authRouter.js'
 import busRouter from './routers/busRouter.js'
 import logger from './middlewares/logger.js'
@@ -21,7 +21,7 @@ app.use(express.json())
 app.get('/', welcome)
 app.use('/user', userRouter)
 app.use('/bus', busRouter)
-app.use('/product', productRouter)
+//app.use('/linha', linhaRouter)
 app.use('/auth', authRouter)
 app.use('*', routeNotFounded)
 
