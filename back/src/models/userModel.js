@@ -15,6 +15,24 @@ const userSchema = z.object({
         })
         .min(3, {message: "O nome deve ter no mínimo 3 caracteres."})
         .max(100, {message: "O nome deve ter no máximo 100 caracteres."}),
+    nameMae: z.string({
+            required_error: "O nome da Mãe é obrigatório",
+            invalid_type_error: "O nome da Mãe deve ser uma string.",
+        })
+        .min(3, {message: "O nome deve ter no mínimo 3 caracteres."})
+        .max(100, {message: "O nome deve ter no máximo 100 caracteres."}),
+    namePai: z.string({
+            required_error: "O nome da Pai é obrigatório",
+            invalid_type_error: "O nome da Pai deve ser uma string.",
+        })
+        .min(3, {message: "O nome deve ter no mínimo 3 caracteres."})
+        .max(100, {message: "O nome deve ter no máximo 100 caracteres."}),
+    cep: z.string({
+            required_error: "O nome da Pai é obrigatório",
+            invalid_type_error: "O nome da Pai deve ser uma string.",
+        })
+        .min(8, {message: "O cep deve ter no mínimo 8 caracteres."})
+        .max(8, {message: "O cep deve ter no máximo 8 caracteres."}),
     email: z.string({
             required_error: "O email é obrigatório",
             invalid_type_error: "O email deve ser uma string.",
