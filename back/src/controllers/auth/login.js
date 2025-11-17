@@ -35,11 +35,11 @@ const login = async (req, res, next) => {
 
         const session = await create(user.id)
 
-        const actionToken = jwt.sign({name: user.name, publicId: user.public_id}, SECRET_KEY, { expiresIn: '15m'})
+        const actionToken = jwt.sign({nome: user.nome, publicId: user.public_id}, SECRET_KEY, { expiresIn: '15m'})
         const refreshToken = jwt.sign({publicId: user.public_id, session: session.id}, SECRET_KEY, { expiresIn: '2d'})
 
         res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 2 * 24 * 60 * 60 * 1000 })
-        return res.json({actionToken, refreshToken, user: {name: user.name, email: user.email, publicId: user.public_id}})
+        return res.json({actionToken, refreshToken, user: {nome: user.nome, email: user.email, publicId: user.public_id}})
     } catch(error) {
         console.log(error)
         if(error?.code === 'P2002')
