@@ -1,14 +1,12 @@
-import { validateLinhaToPatch, updateLinha } from './linhasModel.js';
+import { validateLinhaToPatch, updateLinha } from '../linhasModel.js'; 
 
 export const updateLinhaController = async (req, res) => {
-
+    
     const id = Number(req.params.id);
-
 
     if (isNaN(id)) {
         return res.status(400).json({ erro: "ID inválido." });
     }
-
 
     const validacao = validateLinhaToPatch(req.body);
 
@@ -19,13 +17,11 @@ export const updateLinhaController = async (req, res) => {
         });
     }
 
-
     if (Object.keys(validacao.data).length === 0) {
         return res.status(400).json({ erro: "Nenhum dado enviado para atualização." });
     }
 
     try {
-   
         const linhaAtualizada = await updateLinha(id, validacao.data);
 
         return res.status(200).json({
@@ -34,7 +30,6 @@ export const updateLinhaController = async (req, res) => {
         });
 
     } catch (error) {
-
         if (error.code === 'P2025') {
             return res.status(404).json({ erro: "Linha não encontrada." });
         }

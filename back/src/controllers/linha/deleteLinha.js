@@ -1,4 +1,4 @@
-import { remove } from './linhasModel.js';
+import { removeLinha } from './linhasModel.js';
 
 export const deleteLinhaController = async (req, res) => {
     const id = Number(req.params.id);
@@ -8,8 +8,8 @@ export const deleteLinhaController = async (req, res) => {
     }
 
     try {
-        const linhaDeletada = await remove(id);
-
+        const linhaDeletada = await removeLinha(id);
+        
         return res.status(200).json({
             mensagem: "Linha removida com sucesso.",
             linha: linhaDeletada

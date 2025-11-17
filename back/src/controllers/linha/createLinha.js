@@ -1,4 +1,4 @@
-import { validateLinhaToCreate, create } from './linhasModel.js';
+import { validateLinhaToCreate, createLinha } from './linhasModel.js';
 
 export const createLinhaController = async (req, res) => {
     const dados = req.body;
@@ -14,7 +14,7 @@ export const createLinhaController = async (req, res) => {
 
     try {
         
-        const novaLinha = await create(validacao.data);
+        const novaLinha = await createLinha(validacao.data);
 
         
         return res.status(201).json({

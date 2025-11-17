@@ -3,33 +3,38 @@ import { z } from 'zod'
 
 const prisma = new PrismaClient()
 
+// VALIDAÇÃO
+
 const linhaSchema = z.object({
     id: z.number({
             required_error: "O ID é obrigatório",
             invalid_type_error: "O ID deve ser um número inteiro.",
         })
-        .positive({message: "O ID deve ser um número positivo."}),
-        rota: z.string({
+        .positive({message: "O ID deve ser um número positivo."})
+        .optional(), 
+
+    rota: z.string({
             required_error: "A rota é obrigatória",
             invalid_type_error: "A rota deve ser uma string.",
         })
         .max(1000, { message: "A rota deve ter no máximo 1000 caracteres." }),
     
-        nome: z.string({
+    nome: z.string({
             required_error: "O nome da linha é obrigatório",
             invalid_type_error: "O nome deve ser uma string.",
         })
         .min(1, { message: "O nome não pode ser vazio." })
-        .max(20, { message: "O nome deve ter no máximo 20 caracteres." }),
+        .max(20, { message: "O nome deve ter no máximo 20 caracteres." }), 
     
-        adminId: z.number({
-            required_error: "O ID do admin é obrigatório",
-            invalid_type_error: "O adminId deve ser um número.",
-        })
-    
+    adminId: z.number({
+        required_error: "O ID do admin é obrigatório",
+        invalid_type_error: "O adminId deve ser um número.",
+    })
+    .int()
+    .positive()
 })
 
-// VALIDAÇÃO
+// FUNÇÕES DE VALIDAÇÃO
 
 export const validateLinha = (linha) => {
     return linhaSchema.safeParse(linha)
@@ -45,6 +50,11 @@ export const validateLinhaToUpdate = (linha) => {
     return updateSchema.safeParse(linha)
 }
 
+export const validateLinhaToPatch = (linha) => {
+    const patchSchema = linhaSchema.omit({ id: true }).partial();
+    return patchSchema.safeParse(linha);
+}
+
 // CRUD
 
 export const getAllLinhas = async () => {
@@ -54,8 +64,10 @@ export const getAllLinhas = async () => {
                 select: {
                     id: true,
                     nome: true,
+                    email: true
                 }
-            }
+            },
+            onibus: true 
         }
     })
     return linhas
@@ -66,8 +78,13 @@ export const getLinhaById = async (id) => {
         where: { id },
         include: {
             admin: {
-                select: { nome: true }
-            }
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true
+                }
+            },
+            onibus: true
         }
     })
     return linha
@@ -87,9 +104,7 @@ export const removeLinha = async (id) => {
     return linha
 }
 
-export const updateLinha = async (linhaData) => {
-    const { id, ...dataToUpdate } = linhaData;
-
+export const updateLinha = async (id, dataToUpdate) => {
     const result = await prisma.linha.update({
         where: { id },
         data: dataToUpdate,
