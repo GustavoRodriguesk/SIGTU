@@ -18,6 +18,12 @@ export const userSchema = z.object({
     })
     .max(300, "O public_id deve ter no máximo 300 caracteres."),
 
+  email: z
+    .string({
+      required_error: "O email é obrigatório",
+    })
+    .max(300, "O email deve ter no máximo 300 caracteres."),
+
   nascimento: z
     .string({
       required_error: "A data de nascimento é obrigatória.",
@@ -129,7 +135,7 @@ export const validateUserToCreate = (user) => {
 export const validateUserToLogin = (user) => {
   const partialUserSchema = userSchema.partial({
     id: true,
-    name: true,
+    nome: true,
   });
   return partialUserSchema.safeParse(user);
 };
@@ -138,7 +144,7 @@ export const getAll = async () => {
   const users = await prisma.user.findMany({
     select: {
       id: true,
-      name: true,
+      nome: true,
       email: true,
       cpf: true,
     },
@@ -157,6 +163,7 @@ export const getById = async (id) => {
       public_id: true,
       nascimento: true,
       nome: true,
+      email: true,
       nomeMae: true,
       nomePai: true,
       cep: true,
@@ -191,38 +198,40 @@ export const getByEmail = async (email) => {
   const user = await prisma.user.findUnique({
     where: {
       email,
-    }, select: {
-        pass: false,
-        id: true,
-        public_id: true,
-        nascimento: true,
-        nome: true,
-        nomeMae: true,
-        nomePai: true,
-        cep: true,
-        cpf: true,
-        telefone: true,
-        faltas: true,
-        sitFamiliar: true,
-        residencia: true,
-        universidade: true,
-        semestre: true,
-        anoConclusao: true,
-        dias: true,
-        periodo: true,
-        horDetalhado: true,
-        bolsa: true,
-        bolsaTipo: true,
-        bolsaPercent: true,
-        foto3x4: true,
-        cpfImg: true,
-        compResidencia: true,
-        historicoEscolar: true,
-        decMatricula: true,
-        cronogramaAulas: true,
-        declaracaoEscrita: true,
-        cepPonto: true,
-      },
+    },
+    select: {
+      pass: false,
+      id: true,
+      public_id: true,
+      nascimento: true,
+      nome: true,
+      email: true,
+      nomeMae: true,
+      nomePai: true,
+      cep: true,
+      cpf: true,
+      telefone: true,
+      faltas: true,
+      sitFamiliar: true,
+      residencia: true,
+      universidade: true,
+      semestre: true,
+      anoConclusao: true,
+      dias: true,
+      periodo: true,
+      horDetalhado: true,
+      bolsa: true,
+      bolsaTipo: true,
+      bolsaPercent: true,
+      foto3x4: true,
+      cpfImg: true,
+      compResidencia: true,
+      historicoEscolar: true,
+      decMatricula: true,
+      cronogramaAulas: true,
+      declaracaoEscrita: true,
+      cepPonto: true,
+    },
   });
   return user;
 };
@@ -231,38 +240,40 @@ export const getByCpf = async (email) => {
   const user = await prisma.user.findUnique({
     where: {
       cpf,
-    }, select: {
-        pass: false,
-        id: true,
-        public_id: true,
-        nascimento: true,
-        nome: true,
-        nomeMae: true,
-        nomePai: true,
-        cep: true,
-        cpf: true,
-        telefone: true,
-        faltas: true,
-        sitFamiliar: true,
-        residencia: true,
-        universidade: true,
-        semestre: true,
-        anoConclusao: true,
-        dias: true,
-        periodo: true,
-        horDetalhado: true,
-        bolsa: true,
-        bolsaTipo: true,
-        bolsaPercent: true,
-        foto3x4: true,
-        cpfImg: true,
-        compResidencia: true,
-        historicoEscolar: true,
-        decMatricula: true,
-        cronogramaAulas: true,
-        declaracaoEscrita: true,
-        cepPonto: true,
-      },
+    },
+    select: {
+      pass: false,
+      id: true,
+      public_id: true,
+      nascimento: true,
+      nome: true,
+      email: true,
+      nomeMae: true,
+      nomePai: true,
+      cep: true,
+      cpf: true,
+      telefone: true,
+      faltas: true,
+      sitFamiliar: true,
+      residencia: true,
+      universidade: true,
+      semestre: true,
+      anoConclusao: true,
+      dias: true,
+      periodo: true,
+      horDetalhado: true,
+      bolsa: true,
+      bolsaTipo: true,
+      bolsaPercent: true,
+      foto3x4: true,
+      cpfImg: true,
+      compResidencia: true,
+      historicoEscolar: true,
+      decMatricula: true,
+      cronogramaAulas: true,
+      declaracaoEscrita: true,
+      cepPonto: true,
+    },
   });
   return user;
 };
@@ -270,12 +281,9 @@ export const getByCpf = async (email) => {
 export const create = async (user) => {
   const result = await prisma.user.create({
     data: user,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-    },
   });
+  delete result.pass;
+
   return result;
 };
 
@@ -283,13 +291,9 @@ export const remove = async (id) => {
   const user = await prisma.user.delete({
     where: {
       id,
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-    },
+    }
   });
+  delete user.pass;
   return user;
 };
 
@@ -301,7 +305,7 @@ export const update = async (user) => {
     data: user,
     select: {
       id: true,
-      name: true,
+      nome: true,
       email: true,
     },
   });
