@@ -9,8 +9,8 @@ const router = express.Router()
 
 router.post('/', createBus)
 router.get('/list', busList)
-router.get('/:id', busById)
 router.put('/:id', editBus)
 router.delete('/:id', deleteBus)
+router.get('/:id', busById)
 
 export default router
