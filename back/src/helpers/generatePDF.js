@@ -12,8 +12,7 @@ doc.text("Lista de Alunos", 10, 10);
 autoTable(doc, {
   head: [["Aluno", "Linha", "Faculdade"]],
   body: [
-    ["João Silva", "Linha 12", "PUC"],
-    ["Maria Souza", "Linha 04", "UFPR"],
+    ["João Silva", "1", "UFSP"],
   ],
 });
 
